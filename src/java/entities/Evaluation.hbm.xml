@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    
+       <class name="entities.Evaluation" table="EVALUATION" schema="A10E3" optimistic-lock="version">    
+            <composite-id >
+        <key-many-to-one name="userName" class="entities.Utilisateur" column="USERNAME" />
+        <key-many-to-one name="idRencontre" class="entities.Rencontre" column="IDRENCONTRE" />
+    </composite-id>
+             
+        <property name="evaluation" type="string">
+            <column name="EVALUATION"  />
+        </property>
+        <property name="commentaire" type="string">
+            <column name="COMMENTAIRE" />
+        </property>
+         
+        
+       
+    </class>
+</hibernate-mapping>

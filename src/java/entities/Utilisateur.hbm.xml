@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="entities.Utilisateur" table="UTILISATEUR" schema="A10E3" optimistic-lock="version">
+        <id name="username" type="string">
+            <column name="USERNAME"  />
+        </id>
+        <property name="motpasse" type="string">
+            <column name="MOTPASSE"  />
+        </property>
+        <property name="nom" type="string">
+            <column name="NOM" />
+        </property>
+        <property name="prenom" type="string">
+            <column name="PRENOM" />
+        </property>
+        <property name="email" type="string">
+            <column name="EMAIL" />
+        </property>
+        <property name="numtel" type="string">
+            <column name="NUMTEL" />
+        </property>
+        <property name="adresse" type="string">
+            <column name="ADRESSE" />
+        </property>
+        <property name="typeuser" type="string">
+            <column name="TYPEUSER" />
+        </property>
+        <property name="etatvalidation" type="string">
+            <column name="ETATVALIDATION" />
+        </property>
+        <property name="etatactivation" type="string">
+            <column name="ETATACTIVATION" />
+        </property>
+        <many-to-one name="adminValidateur" class="entities.Utilisateur">
+            <column name ="ADMINVALIDATEUR" />
+        </many-to-one>
+        <set name="compteValide" table="UTILISATEUR" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ADMINVALIDATEUR"/>
+            </key>
+            <one-to-many class="entities.Utilisateur" />
+        </set>
+        <many-to-one name="adminDesactivateur" class="entities.Utilisateur">
+            <column name ="ADMINDESACTIVATEUR" />
+        </many-to-one>
+        <set name="compteDesactive" table="UTILISATEUR" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ADMINDESACTIVATEUR"/>
+            </key>
+            <one-to-many class="entities.Utilisateur" />
+        </set>
+       <set name="disponibilite" table="DETAILDISPONIBILITE" >
+            <key>
+                <column name="USERNAME"/>
+            </key>
+            <one-to-many class="entities.DetailDisponibilite" />
+        </set>
+        
+        <set name="rencontres" table="RENCONTRE" inverse="true" lazy="true" fetch="select" >
+            <key>
+                <column name="U_N_PLANIFICATEUR"/>
+            </key>
+            <one-to-many class="entities.Rencontre" />
+        </set>
+        <set name="rencontresAnnules" table="RENCONTRE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="USERNAME"/>
+            </key>
+            <one-to-many class="entities.Rencontre" />
+        </set>
+         <set name="categories" table="CATEGORIE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ADMINUSERNAME"/>
+            </key>
+            <one-to-many class="entities.Categorie" />
+        </set>
+         <set name="evaluationUser" table="EVALUATION" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="USERNAME"/>
+            </key>
+            <one-to-many class="entities.Evaluation" />
+        </set>     
+     </class>
+</hibernate-mapping>

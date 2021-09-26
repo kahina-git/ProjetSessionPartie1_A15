@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="entities.Rencontre" table="RENCONTRE" schema="A10E3" optimistic-lock="version">
+        <id name="idRencontre" type="int">
+            <column name="IDRENCONTRE"  />
+        </id>
+        <property name="dateRencontre" type="date">
+            <column name="DATERENCONTRE"  />
+        </property>
+        <property name="heureRencontre" type="date">
+            <column name="HEURERENCONTRE" />
+        </property>
+        <property name="titreRencontre" type="string">
+            <column name="TITRERENCONTRE" />
+        </property>
+        <property name="dureeRencontre" type="date">
+            <column name="DUREERENCONTRE" />
+        </property>
+        <property name="etatRencontre" type="string">
+            <column name="ETATRENCONTRE" />
+        </property>
+        <many-to-one name="U_N_Planificateur" class="entities.Utilisateur">
+            <column name ="U_N_PLANIFICATEUR" />
+        </many-to-one>
+        <many-to-one name="userName" class="entities.Utilisateur">
+            <column name ="USERNAME" />
+        </many-to-one>
+        
+        <many-to-one name="idCategorie" class="entities.Categorie">
+            <column name ="IDCATEGORIE" />
+        </many-to-one>
+        
+        <set name="evaluationRencontre" table="EVALUATION" >
+            <key>
+                <column name="IDRENCONTRE"/>
+            </key>
+            <one-to-many class="entities.Evaluation" />
+        </set>
+    </class>
+</hibernate-mapping>

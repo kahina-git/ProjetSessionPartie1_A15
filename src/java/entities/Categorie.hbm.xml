@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="entities.Categorie" table="CATEGORIE" schema="A10E3" optimistic-lock="version">
+        <id name="idCategorie" type="int">
+            <column name="IDCATEGORIE"  />
+        </id>
+        <property name="nomCategorie" type="string">
+            <column name="NOMCATEGORIE"  />
+        </property>
+        <property name="etatCategorie" type="string">
+            <column name="ETATCATEGORIE" />
+        </property>
+             
+        <many-to-one name="adminUserName" class="entities.Utilisateur">
+            <column name ="ADMINUSERNAME" />
+        </many-to-one>
+        
+         <set name="rencontresCategories" table="RENCONTRE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="IDCATEGORIE"/>
+            </key>
+            <one-to-many class="entities.Rencontre" />
+        </set>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="entities.DetailDisponibilite" table="DETAILDISPONIBILITE" schema="A10E3" optimistic-lock="version">
+        <id name="idDisponibilite" type="string">
+            <column name="IDDISPONIBILITE"  />
+        </id>
+        <property name="jour" type="date">
+            <column name="JOUR"  />
+        </property>
+        <property name="heureDebut" type="date">
+            <column name="HEUREDEBUT" />
+        </property>
+        <property name="duree" type="date">
+            <column name="DUREE" />
+        </property>
+        <many-to-one name="username" class="entities.Utilisateur">
+            <column name ="USERNAME" />
+        </many-to-one>
+    </class>
+</hibernate-mapping>
+
