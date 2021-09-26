@@ -39,18 +39,10 @@ public class Planification {
 
     
     @GET
-    @Path("exemple")
-    @Produces(javax.ws.rs.core.MediaType.TEXT_PLAIN)
-    public String getXml() {
-        return ("Exemple");
-
-    }
-/*
-    @GET
     @Path("AllUsers")
     @Produces(javax.ws.rs.core.MediaType.APPLICATION_JSON)
     public String allUsers() {
-        //users=new JSONArray();
+        
         JSONArray users = UtilisateurDAO.allUsers();
         return users.toString();
 
@@ -60,52 +52,56 @@ public class Planification {
     @Path("SingleUser&{id}")
     @Produces(javax.ws.rs.core.MediaType.APPLICATION_JSON)
     public String singleUser(@PathParam("id") String username) {
-        JSONObject OutPut = new JSONObject();
+      
+        JSONObject OutPut = UtilisateurDAO.singleUser(username);
         
-        JSONObject user = UtilisateurDAO.singleUser(username);
-        if (user.isEmpty()) {
-            OutPut.accumulate("Status", "ERROR");
-            OutPut.accumulate("Message", "No user can be found for the specified id");
-        } else {
-            OutPut = user;
-        }
         return OutPut.toString();
 
     }
 
-//    */
+    @GET
+    @Path("InsertUser")
+    @Produces(javax.ws.rs.core.MediaType.APPLICATION_JSON)
+    public String InsertUser() {
+        
+         JSONObject OutPut = UtilisateurDAO.insert();
+        
+        return OutPut.toString();
+        
+    }
     @GET
     @Path("DeleteUser&{id}")
     @Produces(javax.ws.rs.core.MediaType.APPLICATION_JSON)
     public String deleteUser(@PathParam("id") String id) 
     {
-         String mainJSON;
-      mainJSON=UtilisateurDAO.delete(id);
-//        
-//       
-//       
-//////        UtilisateurDAO.delete(id);
-////        JSONObject OutPut = new JSONObject();
-////        OutPut.accumulate("Status", "OK");
-////        OutPut.accumulate("Message", "User deleted");
-////        return OutPut.toString();
-      return mainJSON;  
+       
+        JSONObject OutPut = UtilisateurDAO.deleteUser(id);
+        
+        return OutPut.toString();
+        
     }
     
-//   @GET
-//    @Path("UpdateUser&{user}")
-//    @Produces(javax.ws.rs.core.MediaType.APPLICATION_JSON)
-//    public String updateName(@PathParam("user") JSONObject utilisateur) 
-//    {
-//        UtilisateurDAO.updateName(utilisateur);
-//        JSONObject OutPut = new JSONObject();
-//        OutPut.accumulate("Status", "OK");
-//        OutPut.accumulate("Message", "User updated");
-//        return OutPut.toString();
-//        
-//    }*/
+    @GET
+    @Path("UpdateUser&{id}&{name}")
+    @Produces(javax.ws.rs.core.MediaType.APPLICATION_JSON)
+    public String updateName(@PathParam("id") String id,@PathParam("name") String name) 
+    {
+        JSONObject OutPut= UtilisateurDAO.updateName(id,name);
+        
+        return OutPut.toString();
+        
+    }
     
-  
+  @GET
+    @Path("ValiderCompte&{id}")
+    @Produces(javax.ws.rs.core.MediaType.APPLICATION_JSON)
+    public String ValiderCompte(@PathParam("id") String id) 
+    {
+        JSONObject OutPut = UtilisateurDAO.ValiderCompte(id);
+                
+        return OutPut.toString();
+        
+    }
     
     //les services concerant la rencontre
     

@@ -6,6 +6,7 @@
 package entities;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.HeaderParam;
@@ -37,25 +38,26 @@ public class Utilisateur {
     @QueryParam("etatactivation")
     private String etatactivation;
     @QueryParam("adminValidateur")
-    private Utilisateur adminValidateur;
+    private Utilisateur adminValidateur ;
     @QueryParam("adminDesactivateur")
-    private Utilisateur adminDesactivateur;
+    private Utilisateur adminDesactivateur; 
     @QueryParam("disponibilite")
-    private Set disponibilite = new HashSet(0);
+    private Set<DetailDisponibilite> disponibilite = new HashSet<DetailDisponibilite>(0);
     @QueryParam("compteValide")
-    private Set compteValide = new HashSet(0);
+    private Set<Utilisateur> compteValide = new HashSet<Utilisateur>(0);
     @QueryParam("compteDesactive")
-    private Set compteDesactive = new HashSet(0);
+    private Set<Utilisateur> compteDesactive = new HashSet<Utilisateur>(0);
     @QueryParam("rencontres")
-    private Set <Rencontre> rencontres = new HashSet<Rencontre>(0);
+    private Set<Rencontre> rencontres = new HashSet<Rencontre>(0);
     @QueryParam("categories")
-    private Set categories = new HashSet(0);
+    private Set<Categorie> categories = new HashSet<Categorie>(0);
     @QueryParam("rencontresAnnules")
-    private Set rencontresAnnules = new HashSet(0);
+    private Set<Rencontre> rencontresAnnules = new HashSet<Rencontre>(0);
     @QueryParam("evaluationUser")
-    private Set evaluationUser = new HashSet(0);
+    private Set<Evaluation> evaluationUser = new HashSet<Evaluation>(0);
 
     public Utilisateur() {
+      
     }
 
     public Utilisateur(String username, String motpasse) {
@@ -126,19 +128,19 @@ public class Utilisateur {
         this.adminDesactivateur = adminDesactivateur;
     }
 
-    public Set getCompteValide() {
+    public Set<Utilisateur> getCompteValide() {
         return compteValide;
     }
 
-    public void setCompteValide(Set compteValide) {
+    public void setCompteValide(Set<Utilisateur> compteValide) {
         this.compteValide = compteValide;
     }
 
-    public Set getCompteDesactive() {
+    public Set<Utilisateur> getCompteDesactive() {
         return compteDesactive;
     }
 
-    public void setCompteDesactive(Set compteDesactive) {
+    public void setCompteDesactive(Set<Utilisateur> compteDesactive) {
         this.compteDesactive = compteDesactive;
     }
 
@@ -224,7 +226,7 @@ public class Utilisateur {
     }
 
     public Utilisateur getAdminValidateur() {
-        return adminValidateur = new Utilisateur();
+        return adminValidateur ;
     }
 
     public void setAdminValidateur(Utilisateur adminValidateur) {
@@ -232,14 +234,14 @@ public class Utilisateur {
     }
 
     public Utilisateur getAdminDesactivateur() {
-        return adminDesactivateur = new Utilisateur();
+        return adminDesactivateur ;
     }
 
     public void setAdminDesactivateur(Utilisateur adminDesactivateur) {
         this.adminDesactivateur = adminDesactivateur;
     }
 
-    public Set getDisponibilite() {
+    public Set<DetailDisponibilite> getDisponibilite() {
         return disponibilite;
     }
 
@@ -247,7 +249,7 @@ public class Utilisateur {
         this.disponibilite = disponibilite;
     }
 
-    public Set getRencontres() {
+    public Set<Rencontre> getRencontres() {
         return rencontres;
     }
 
@@ -255,7 +257,7 @@ public class Utilisateur {
         this.rencontres = rencontres;
     }
 
-    public Set getCategories() {
+    public Set<Categorie> getCategories() {
         return categories;
     }
 
@@ -263,7 +265,7 @@ public class Utilisateur {
         this.categories = categories;
     }
 
-    public Set getRencontresAnnules() {
+    public Set<Rencontre> getRencontresAnnules() {
         return rencontresAnnules;
     }
 
@@ -271,7 +273,7 @@ public class Utilisateur {
         this.rencontresAnnules = rencontresAnnules;
     }
 
-    public Set getEvaluationUser() {
+    public Set<Evaluation> getEvaluationUser() {
         return evaluationUser;
     }
 
@@ -300,28 +302,15 @@ public class Utilisateur {
                 ", motpasse:" + motpasse + '\'' +
                 '}';
     }
-    public boolean isAdmin(){
+
+     public Boolean isNotAdmin(){
+         
+         boolean admin = true; 
+         if (this.getTypeuser().equals("Administrateur")){
+             admin = false;
+         }
+         
+         return admin;
+     }
     
-        if (this.typeuser == "Administarateur") {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public boolean isNotAdmin() {
-        if (this.typeuser == "Administarateur") {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    public boolean estPlanificateurRencontre() {
-        if (this.getRencontres().size() != 0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 }

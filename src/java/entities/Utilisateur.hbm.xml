@@ -5,6 +5,7 @@
     <class name="entities.Utilisateur" table="UTILISATEUR" schema="A10E3" optimistic-lock="version">
         <id name="username" type="string">
             <column name="USERNAME"  />
+            <generator class="assigned"/>
         </id>
         <property name="motpasse" type="string">
             <column name="MOTPASSE"  />

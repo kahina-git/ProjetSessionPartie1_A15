@@ -29,21 +29,46 @@ public class UtilisateurDAO {
 
     static Session session = null;
 
-    public static void insert(Utilisateur utilisateur) {
+    public static JSONObject insert() {
+        session = Planification.sessionFactory.openSession();
+        Transaction tx = session.beginTransaction();
+        Utilisateur adminvalidateur = (Utilisateur) session.get(Utilisateur.class, "SKarima");
+       
+        Utilisateur utilisateur = new Utilisateur("Robert", "test", "test", "test", "test@gmail.com", "1111111", "1478 Rue jarry", "Etudiant", "Non Validé", "Non Activé", adminvalidateur, null);
+        session.save(utilisateur);
+        //session.flush();
+        //session.refresh(utilisateur);
+         JSONObject response = new JSONObject();
+         response.accumulate("Statut", "OK");
+         response.accumulate("message", "Un nouveau utilisateur ajouté");
+        tx.commit();
+        session.close();
+        return response;
+                
+    }
+
+    public static JSONObject deleteUser(String id) {
 
         session = Planification.sessionFactory.openSession();
         Transaction tx = session.beginTransaction();
 
-        session.save(utilisateur);
-
+        Utilisateur user = (Utilisateur) session.get(Utilisateur.class, id);
+        JSONObject response = new JSONObject();
+        if (user == null) {
+            response.accumulate("Statut", "erreur");
+            response.accumulate("message", "l'utilisateur  avec id: " + id + " n'existe pas");
+        } else {
+            session.delete(user);
+           response.accumulate("Statut", "OK");
+           response.accumulate("message", "l'utilisateur avec id: " + id + " est supprimé");
+        }
+        
         tx.commit();
         session.close();
+        return response;
     }
-
     
-    
-    
-    public static String delete(String id) {
+    public static JSONObject delete(String id) {
         JSONObject response = new JSONObject();
 
         session = Planification.sessionFactory.openSession();
@@ -69,116 +94,38 @@ public class UtilisateurDAO {
             response.accumulate("message", "l'utilisateur avec id: " + id + " est bien supprimé");
 
             session.delete(utilisateur);
-        }
-        else{
+        } else {
             response.accumulate("Statut", "Non autoriser");
             response.accumulate("message", "l'utilisateur avec id: " + id + " est un administrateur");
-        
+
         }
         session.close();
-        return response.toString();
+        return response;
     }
-    
-    /*public static void delete(Utilisateur utilisateur) {
 
-        session = Planification.sessionFactory.openSession();
-        Transaction tx = session.beginTransaction();
-
-        session.delete(utilisateur);
-
-        tx.commit();
-        session.close();
-    }*/
-//    public static String delete(String id) {
-//        JSONObject response = new JSONObject();
-//        session = Planification.sessionFactory.openSession();
-//        Transaction tx = session.beginTransaction();
-//
-//       Utilisateur utilisateur = (Utilisateur) session.get(Utilisateur.class, id);
-//        
-//       if (utilisateur == null) {
-//            response.accumulate("Statut", "erreur");
-//            response.accumulate("message", "l'utilisateur  avec id: " + id + " n'existe pas");
-//        } else {
-//           utilisateur.setNom("Hello");
-//           session.update(utilisateur);
-//              //  session.delete(utilisateur);
-//            response.accumulate("Statut", "OK");
-//            response.accumulate("message", "l'utilisateur avec id: " + id + " est bien maj");
-//        }
-//
-//        //session.delete(utilisateur);
-//        tx.commit();
-//        session.close();
-//        return response.toString();
-//    }
-
-    /* public static void updateName(String id,String name){
+       public static JSONObject updateName(String id,String name){
      
-         Session session = Planification.sessionFactory.openSession();
+         session = Planification.sessionFactory.openSession();
          Transaction tx=session.beginTransaction();
-        Query query = session.createQuery("update Utilisateur U set U.nom =:name where U.username= :UserID");
-        query.setParameter("UserID", id);
-        query.setParameter("name",name);
-        query.executeUpdate();
-        //Utilisateur utilisateur= FindUserById(id);
+         Utilisateur user = (Utilisateur) session.get(Utilisateur.class, id);
+         JSONObject response = new JSONObject();
         
-          
-        tx.commit();
-        session.close();
-}*/
-    public static JSONObject updateName(JSONObject user) {
-
-        Session session = Planification.sessionFactory.openSession();
-        Transaction tx = session.beginTransaction();
-         //utilisateur = new Utilisateur();
-        ///utilisateur.setMotpasse(user.getString("motpasse"));
-        
-        Utilisateur utilisateur = (Utilisateur) session.get(Utilisateur.class, user.getString("username"));
-       
-        
-            user.accumulate("NomUtilisateur", utilisateur.getUsername());
-            user.accumulate("Nom", utilisateur.getNom());
-            user.accumulate("Prenom", utilisateur.getPrenom());
-            user.accumulate("Mail", utilisateur.getEmail());
-            user.accumulate("NumeroTelephone", utilisateur.getNumtel());
-            user.accumulate("Adresse", utilisateur.getAdresse());
-            user.accumulate("Type utilisateur", utilisateur.getTypeuser());
-            user.accumulate("Etat validation", utilisateur.getEtatvalidation());
-            user.accumulate("Etat activation", utilisateur.getEtatactivation());
-            user.accumulate("Admin validateur", utilisateur.getAdminValidateur().getNom());
-            user.accumulate("Admin désactivateur", utilisateur.getAdminDesactivateur().getNom());
+        if (user == null) {
+            response.accumulate("Statut", "erreur");
+            response.accumulate("message", "l'utilisateur  avec id: " + id + " n'existe pas");
+        } else {
+            user.setNom(name);
+            session.update(user);
+           response.accumulate("Statut", "OK");
+           response.accumulate("message", "l'utilisateur avec id: " + id + " est mis à jour");
+        }
         
         tx.commit();
         session.close();
-        return user;
-    }
-
-    
-            
-       /*     public static void updateName(Utilisateur user) {
-
-        Session session = Planification.sessionFactory.openSession();
-        Transaction tx = session.beginTransaction();
-        Utilisateur utilisateur = (Utilisateur) session.load(Utilisateur.class, user.getUsername());
-        utilisateur.setNom("Yacine");
-        session.update(utilisateur);
-        
-        tx.commit();
-        session.close();
-    }*/
-    public static void updateTypeUser(Utilisateur utilisateur, String typeUser) {
-
-        session = Planification.sessionFactory.openSession();
-        Transaction tx = session.beginTransaction();
-
-        utilisateur.setTypeuser(typeUser);
-        session.update(utilisateur);
-
-        tx.commit();
-        session.close();
-    }
-
+        return response;
+         
+}
+   
     public static JSONArray allUsers() {
 
         session = Planification.sessionFactory.openSession();
@@ -186,6 +133,7 @@ public class UtilisateurDAO {
         Query query = session.createQuery("from Utilisateur");
         List<Utilisateur> results = query.list();
         JSONObject user = new JSONObject();
+
         JSONArray users = new JSONArray();
         for (Utilisateur line : results) {
             user.accumulate("username", line.getUsername());
@@ -197,9 +145,7 @@ public class UtilisateurDAO {
             user.accumulate("TypeUtilisateur", line.getTypeuser());
             user.accumulate("etatvalidation", line.getEtatvalidation());
             user.accumulate("etatActivation", line.getEtatactivation());
-            user.accumulate("adminValidateur", line.getAdminValidateur().getNom());
-            user.accumulate("adminDesactivateur", line.getAdminDesactivateur().getNom());
-
+            
             users.add(user);
             user.clear();
         }
@@ -212,64 +158,65 @@ public class UtilisateurDAO {
 
         session = Planification.sessionFactory.openSession();
 
-        /*Query query = session.createQuery("from Utilisateur U where U.username= :UserID");
-        query.setParameter("UserID", id);
-        List<Utilisateur> results = query.list();*/
         JSONObject user = new JSONObject();
-        Utilisateur utilisateur = (Utilisateur)session.get(Utilisateur.class, id);
+        Utilisateur utilisateur = (Utilisateur) session.get(Utilisateur.class, id);
+
+        user.accumulate("NomUtilisateur", utilisateur.getUsername());
+        user.accumulate("Nom", utilisateur.getNom());
+        user.accumulate("Prenom", utilisateur.getPrenom());
+        user.accumulate("Mail", utilisateur.getEmail());
+        user.accumulate("NumeroTelephone", utilisateur.getNumtel());
+        user.accumulate("Adresse", utilisateur.getAdresse());
+        user.accumulate("Type utilisateur", utilisateur.getTypeuser());
+        user.accumulate("Etat validation", utilisateur.getEtatvalidation());
+        user.accumulate("Etat activation", utilisateur.getEtatactivation());
         
-            user.accumulate("NomUtilisateur", utilisateur.getUsername());
-            user.accumulate("Nom", utilisateur.getNom());
-            user.accumulate("Prenom", utilisateur.getPrenom());
-            user.accumulate("Mail", utilisateur.getEmail());
-            user.accumulate("NumeroTelephone", utilisateur.getNumtel());
-            user.accumulate("Adresse", utilisateur.getAdresse());
-            user.accumulate("Type utilisateur", utilisateur.getTypeuser());
-            user.accumulate("Etat validation", utilisateur.getEtatvalidation());
-            user.accumulate("Etat activation", utilisateur.getEtatactivation());
-            user.accumulate("Admin validateur", utilisateur.getAdminValidateur().getNom());
-            user.accumulate("Admin désactivateur", utilisateur.getAdminDesactivateur().getNom());
-        
-        
+
         session.close();
         return user;
     }
 
-    public static Utilisateur FindUserById(String id) {
+    public static Utilisateur singleUserById(String id) {
 
         session = Planification.sessionFactory.openSession();
 
         Query query = session.createQuery("from Utilisateur U where U.username= :UserID");
         query.setParameter("UserID", id);
         List<Utilisateur> results = query.list();
-        Utilisateur user = new Utilisateur();
+        Utilisateur planificateur = new Utilisateur();
         for (Utilisateur line : results) {
-            user.setUsername(line.getUsername());
-            user.setNom(line.getNom());
-            user.setPrenom(line.getPrenom());
-            user.setEmail(line.getEmail());
-            user.setNumtel(line.getNumtel());
-            user.setAdresse(line.getAdresse());
-            user.setTypeuser(line.getTypeuser());
+
+            planificateur = line;
+
         }
         session.close();
-        return user;
+        return planificateur;
     }
-     public static Utilisateur singleUserById(String id){
-     
-    session = Planification.sessionFactory.openSession();
-        
-     Query query = session.createQuery("from Utilisateur U where U.username= :UserID");
-        query.setParameter("UserID", id);
-        List<Utilisateur> results = query.list();
-         Utilisateur planificateur =new Utilisateur();
-    for(Utilisateur line:results){
-        
-        planificateur=line;
-      
-    }
-        session.close();
-       return planificateur;
-}
 
+    public static JSONObject ValiderCompte(String id) {
+
+        
+        session = Planification.sessionFactory.openSession();
+        Transaction tx = session.beginTransaction();
+        JSONObject response = new JSONObject();
+        
+        Utilisateur user = (Utilisateur) session.get(Utilisateur.class, id);
+        
+        if (user == null) {
+            response.accumulate("Statut", "erreur");
+            response.accumulate("message", "l'utilisateur  avec id: " + id + " n'existe pas");
+        } else {
+        user.setEtatvalidation("Validé");
+        /* avec une interface graphique je recupere le id de l'administrateur validateur
+           adminvalidateur.getCompteValide().add(user);
+        */
+          session.update(user);
+           response.accumulate("Statut", "OK");
+           response.accumulate("message", "le compte avec id: " + id + " est validé");
+        }
+         
+        tx.commit();
+        session.close();
+        return response;
+    }
 }
